@@ -1,0 +1,23 @@
+# OS
+.DS_Store
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Claude Code, per person
+.claude/settings.local.json
+
+# Material that is cited, never committed (copyright, personal data)
+sources/
+
+# Dependencies and caches
+node_modules/
+.venv/
+__pycache__/
+*.py[cod]
+.cache/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/

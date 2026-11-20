@@ -1,0 +1,11 @@
+{
+  "name": "stemee-org",
+  "owner": { "name": "stemee" },
+  "plugins": [
+    {
+      "name": "new-project",
+      "source": "./",
+      "description": "Set up a new project with the documentation-first method, also starting from a prototype or any other reference."
+    }
+  ]
+}

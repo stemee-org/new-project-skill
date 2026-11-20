@@ -1,0 +1,65 @@
+# Stack-agnostic CI: detects a Node or Python project at the root and runs whichever
+# lint / typecheck / test / build scripts exist. Replace it with a stack-specific
+# workflow in the CI task (T03).
+# Detection happens in a step: hashFiles() in a job-level `if` makes the whole
+# workflow invalid, and the run fails without creating any job.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  node:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - id: detect
+        run: |
+          [ -f package.json ] && echo "node=true" >> "$GITHUB_OUTPUT" || echo "No package.json: nothing to do"
+          [ -f pnpm-lock.yaml ] && echo "pnpm=true" >> "$GITHUB_OUTPUT" || true
+      - uses: pnpm/action-setup@v4
+        if: steps.detect.outputs.pnpm == 'true'
+      - uses: actions/setup-node@v4
+        if: steps.detect.outputs.node == 'true'
+        with:
+          node-version: lts/*
+      - name: Install
+        if: steps.detect.outputs.node == 'true'
+        run: |
+          if [ -f pnpm-lock.yaml ]; then pnpm install --frozen-lockfile
+          elif [ -f package-lock.json ]; then npm ci
+          else npm install; fi
+      - name: Lint, typecheck, test, build
+        if: steps.detect.outputs.node == 'true'
+        run: |
+          pm=$([ -f pnpm-lock.yaml ] && echo pnpm || echo npm)
+          for s in lint typecheck test build; do
+            if node -e "process.exit(require('./package.json').scripts?.['$s'] ? 0 : 1)"; then
+              echo "::group::$s"; $pm run $s; echo "::endgroup::"
+            else
+              echo "No '$s' script: skipped"
+            fi
+          done
+
+  python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - id: detect
+        run: |
+          [ -f pyproject.toml ] && echo "python=true" >> "$GITHUB_OUTPUT" || echo "No pyproject.toml at the root: nothing to do"
+      - uses: astral-sh/setup-uv@v6
+        if: steps.detect.outputs.python == 'true'
+      - name: Lint and test
+        if: steps.detect.outputs.python == 'true'
+        run: |
+          uv sync --all-extras --dev
+          uv run ruff check .
+          uv run ruff format --check .
+          uv run pytest

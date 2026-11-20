@@ -1,0 +1,5 @@
+# Copy to .env.local (or .env) and fill in real values. Never commit real secrets.
+# Every variable the app reads is documented here, with a placeholder.
+
+# APP_URL=http://localhost:3000
+# DATABASE_URL=postgres://user:password@localhost:5432/app
