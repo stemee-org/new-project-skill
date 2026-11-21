@@ -1,7 +1,7 @@
 # Plan
 
 ## Goal
-{{What success looks like, in 2–3 sentences, and how we know it is reached. With a reference: what «parity» means, and the pin (repo `branch` @ `commit`); «from:» in the Task column says where the original is.}}
+{{What success looks like, in 2–3 sentences, and how we know it is reached. With a reference: what «parity» means, and the pin (repo `branch` @ `commit`); each task's card says where its original is.}}
 
 ## Non-goals
 - {{Things we decided NOT to do, so nobody starts them. Link the ADR.}}
@@ -15,13 +15,15 @@
 
 ## Task board
 <!-- Claim a task by putting your name + branch BEFORE starting. One owner per task. -->
-| ID | Task | Milestone | Owner | Branch | Status |
-|---|---|---|---|---|---|
-| T00 | Fill documents, ADRs and plan {{from the interview / from the reference}} | M0 | {{name}} | `{{name}}/T00-docs-setup` | in progress |
-| T01 | Scaffold: {{workspace, apps, root scripts, `.gitignore`}} | M1 | — | — | todo |
-| T02 | Quality tools: {{lint, format, type-check, test runner}} | M1 | — | — | todo |
-| T03 | CI: {{replace the generic workflow with one for this stack}} | M1 | — | — | todo |
-| {{T04}} | {{…}} | {{…}} | — | — | todo |
+Each task has a card in [tasks/](tasks/) that says why it exists, what to build and when it is done; the title links to it. This row is the only home of blockers, owner, branch and status. A task can be taken when every task in «Blocked by» is `done`.
+
+| ID | Task | Milestone | Blocked by | Owner | Branch | Status |
+|---|---|---|---|---|---|---|
+| T00 | Fill documents, ADRs, plan and tasks {{from the interview / from the reference}} | M0 | — | {{name}} | `{{name}}/T00-docs-setup` | in progress |
+| T01 | [Scaffold: {{workspace, apps, root scripts, `.gitignore`}}](tasks/T01-scaffold.md) | M1 | — | — | — | todo |
+| T02 | [Quality tools: {{lint, format, type-check, test runner}}](tasks/T02-quality-tools.md) | M1 | T01 | — | — | todo |
+| T03 | [CI: {{replace the generic workflow with one for this stack}}](tasks/T03-ci.md) | M1 | T02 | — | — | todo |
+| {{T04}} | {{[Title: what works when it is done](tasks/T04-slug.md)}} | {{…}} | {{…}} | — | — | todo |
 
 Status values: `todo` · `claimed` · `in progress` · `in review` · `done` · `blocked (reason)`
 

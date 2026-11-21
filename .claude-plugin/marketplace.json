@@ -1,11 +1,14 @@
 {
   "name": "stemee-org",
-  "owner": { "name": "stemee" },
+  "description": "Skills from stemee for the documentation-first method, in one plugin.",
+  "owner": {
+    "name": "stemee"
+  },
   "plugins": [
     {
-      "name": "new-project",
+      "name": "relay",
       "source": "./",
-      "description": "Set up a new project with the documentation-first method, also starting from a prototype or any other reference."
+      "description": "Set up a repo with the documentation-first method (new-project) and run its working cycle: start-session, replan, plan, adr, write-prompt, end-session."
     }
   ]
 }

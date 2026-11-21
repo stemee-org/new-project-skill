@@ -7,8 +7,10 @@ Several people, each with their own Claude Code, work on one repo at different t
 - **Current state beats history.** `STATUS.md` is overwritten; handovers keep the history.
 - **One file per entry for anything several people write** (ADRs, handovers, plans): no merge conflicts, nobody edits someone else's entry.
 - **Claim before you start.** A task has one owner, written in `PLAN.md` before work begins.
+- **The plan changes on purpose.** A task is added, changed or dropped with `/replan`, which moves every document that depends on it and writes down why.
 - **Short beats complete.** A document nobody reads protects nothing.
 - **Written from reading is not confirmed.** What a session inferred is marked as such until a person confirms it.
+- **A task explains itself.** Someone who was not there can say why it exists, start it and tell when to stop, from the card alone.
 - **Nothing fake.** No command that does not exist, no date nobody fixed, no decision nobody took.
 
 ## The documents
@@ -19,6 +21,8 @@ Several people, each with their own Claude Code, work on one repo at different t
 | `README.md` | What this is and how to start, for people | Rarely |
 | `CONTRIBUTING.md` | How we work: branches, the team practice, models, area owners, plugins | When the practice changes; say who asked and when |
 | `docs/PLAN.md` | Goal, non-goals, milestones, task board, open questions | Claiming or finishing a task |
+| `docs/tasks/` | One card per task: why it exists, what to build, when it is done. The board row holds what changes (owner, status, blockers), the card what does not | When a task is created or its scope changes |
+| `docs/agents/` | Where plugin skills find tasks, glossary and ADRs | When those move |
 | `docs/STATUS.md` | What is true right now, one screen | End of every session, overwritten |
 | `docs/ARCHITECTURE.md` | How the system fits together, folder level | When the structure changes |
 | `docs/GLOSSARY.md` | The project's words, one meaning each | When a term appears |
@@ -49,13 +53,15 @@ Every task starts from the team, without being asked.
 - Model and effort are sized on the piece of work, from the table in `CONTRIBUTING.md`, and passed explicitly on each `Agent` call.
 
 ## The session loop
-`/start-session` (status, latest handover, plan, and the branches and pull requests not yet on `main`) → claim → team table → `/plan` if the task is big → work in waves → verify → `/handover` → commit → `/ship` (pull request). `/adr` whenever a hard-to-reverse choice is made. `/write-prompt` to hand a whole task to another session.
+`/start-session` (reads the documents and what is not yet on `main`, asks which tasks, loads the plugin skills the work needs: `mattpocock-skills` for the technical parts, `ponytail` for the code) → claim → team table → `/plan` if the task is big → work in waves → `/end-session` (verify, review, handover, status, commit, pull request). `/replan` whenever the plan must change or work comes up halfway: tasks, cards and every document that depends on them move together. `/adr` whenever a hard-to-reverse choice is made. `/write-prompt` to hand a whole task to another session.
+
+These skills live in one plugin, `relay`, enabled by the kit's `.claude/settings.json`: the repo holds no copy of them, so a fix reaches every project.
 
 ## What experience added
 These were learned the hard way; keep them when adapting the kit.
 - Look past `main` at the start of a session: a task claimed on an unmerged branch is claimed.
 - Look at the open issues of the repo before writing the plan, not after.
 - A rule that changes names who asked and when, in `CONTRIBUTING.md`; the old wording goes.
-- Skills and documents drift apart: when a rule changes, grep the project skills and agents for the old one.
+- Skills and documents drift apart: when a rule changes, grep the project's agents and documents for the old one. This is also why the skills are in a plugin and not copied into each repo.
 - The first CI is generic and gets replaced by the scaffold task; say in the handover what it will do on the first push.
 - Tests that measure time fail under load: list them in `Gotchas` so nobody hunts a bug that is not there.

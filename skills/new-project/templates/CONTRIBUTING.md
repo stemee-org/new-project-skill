@@ -6,7 +6,7 @@
 1. Pull `main`.
 2. Read `docs/STATUS.md` and the latest file in `docs/handover/` (or run `/start-session` in Claude Code).
 3. Create the branch `<name>/<task-id>-<short-desc>` (without a task: `<name>/<short-desc>`).
-4. Claim your task in `docs/PLAN.md` (owner + branch) before starting.
+4. Claim your task in `docs/PLAN.md` (owner + branch) before starting. Work that is not on the board gets a task first (`/replan`).
 
 ## While working
 - Never push to `main`: work on a branch, one task at a time, and open a pull request. Also for a change of documents only.
@@ -41,14 +41,35 @@ One subagent per independent piece of work, none for a piece that is a few tool 
 ## Before you finish
 - Tests, lint and type-check pass.
 - After the push, check the CI on the pull request.
-- Write a handover in `docs/handover/` (`/handover`).
+- Write a handover in `docs/handover/` (`/end-session` does this and the next two steps).
 - Update `STATUS.md` and your task's row in `PLAN.md`.
-- Commit and push on the work branch, then a pull request to `main` (`/ship`). Title in the form of commits, with the task in parentheses at the end. Description with the sections «What changes», «Why this way», «How it was done», «Verified» and «Not verified». Have it reviewed before merging unless told otherwise.
+- Commit and push on the work branch, then a pull request to `main` (`/end-session`). Title in the form of commits, with the task in parentheses at the end. Description with the sections «What changes», «Why this way», «How it was done», «Verified» and «Not verified». Have it reviewed before merging unless told otherwise.
 
 ## Plugins
-`.claude/settings.json` enables them: Claude Code offers to install them to whoever opens the repo. ADRs and the documents of this repo come before any plugin skill; what a plugin skill produces is stored in these documents (`docs/plans/`, the task board, `docs/GLOSSARY.md`, an ADR), never in a parallel set of files.
+`.claude/settings.json` enables them: Claude Code offers to install them to whoever opens the repo. ADRs and the documents of this repo come before any plugin skill; what a plugin skill produces is stored in these documents (`docs/plans/`, `docs/tasks/` and the task board, `docs/GLOSSARY.md`, an ADR), never in a parallel set of files. The lists below are checked against `claude plugin details <plugin>`, not written from memory.
 
-- **`mattpocock-skills@claude-plugins-official`** (by hand: `claude plugin install mattpocock-skills@claude-plugins-official`). {{Which of its skills this project uses and at which point of «How a task is built»: written after installing it and reading its list, not from memory.}}
+- **`relay@stemee-org`** (by hand: `claude plugin marketplace add stemee-org/relay`, then `claude plugin install relay@stemee-org`). The skills of the working cycle; this repo holds no copy of them, so they update with the plugin.
+
+  | When | Skill |
+  |---|---|
+  | A session starts | `/start-session`: reads the documents, asks which tasks, loads the skills of the other two plugins |
+  | The plan must change, or work came up halfway | `/replan`: tasks and every document that depends on them |
+  | A task bigger than a few files | `/plan` |
+  | A hard-to-reverse choice | `/adr` |
+  | A whole task goes to another session | `/write-prompt` |
+  | A session ends | `/end-session`: verification, review, handover, status, commit, pull request |
+
+- **`mattpocock-skills@claude-plugins-official`** (by hand: `claude plugin install mattpocock-skills@claude-plugins-official`). Its engineering skills read `docs/agents/issue-tracker.md` and `docs/agents/domain.md`, which point them at this repo's tasks, glossary and ADRs; `/setup-matt-pocock-skills` is not run here, because it would move them. `/start-session` loads the ones the chosen task needs. Where they meet «How a task is built»:
+
+  | When | Skill |
+  |---|---|
+  | An idea or a task is still vague | `/grill-with-docs` (or `/grill-me`): the answers land in the task card, the glossary or an ADR |
+  | A feature has to become tasks | `/to-tickets`: cards in `docs/tasks/` and rows on the board (a single change to the plan: `/replan`) |
+  | Writing code | `tdd`; `diagnosing-bugs` for a defect; `prototype` for a throwaway answer to a design question |
+  | A new word or a structural choice | `domain-modeling`, `codebase-design` |
+  | Last wave | `code-review`, beside the `code-reviewer` agent |
+
+- **`ponytail@ponytail`** (by hand: `claude plugin marketplace add DietrichGebert/ponytail`, then `claude plugin install ponytail@ponytail`). On in every session: before writing code it looks for what already exists (the codebase, the standard library, the platform, an installed dependency) and writes only what the task needs. It never cuts what the rules of this repo require: tests, validation, the handover and the documents stay. `/start-session` loads it before the first line of code; `/ponytail-review` joins the last wave; `/ponytail-audit` ranks the defects of a whole repo, useful on a codebase adopted in place. `/ponytail off` turns it off for a session. In Claude Code it shows a band above the prompt and keeps each task's cost and time in `~/.config/ponytail/band/` on your machine; nothing is sent anywhere unless you set a webhook.
 
 ## Area owners
 The owner is the person to hear before changing the area, not the only one who may touch it. {{If derived from a reference's history: a proposal until confirmed.}}

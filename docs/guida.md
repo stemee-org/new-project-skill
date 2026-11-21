@@ -1,0 +1,239 @@
+# Guida a relay
+
+Come si usa ogni comando, cosa aspettarsi e cosa resta nella repo. Per installarlo e per una panoramica: [README](../README.md).
+
+- [Il ciclo](#il-ciclo)
+- [`new-project`: impostare la repo](#new-project-impostare-la-repo)
+- [`start-session`: aprire una sessione](#start-session-aprire-una-sessione)
+- [`replan`: cambiare il piano](#replan-cambiare-il-piano)
+- [`plan`, `adr`, `write-prompt`](#plan-adr-write-prompt)
+- [`end-session`: chiudere una sessione](#end-session-chiudere-una-sessione)
+- [I task](#i-task)
+- [In più persone](#in-più-persone)
+- [Domande frequenti](#domande-frequenti)
+
+## Il ciclo
+```
+/relay:new-project            una volta
+        │
+        ▼
+/relay:start-session  ──►  lavoro sul task  ──►  /relay:end-session
+        ▲                        │                       │
+        │                        ▼                       │
+        │                 /relay:replan                  │
+        │           (il piano deve cambiare)             │
+        └────────────── sessione successiva ◄────────────┘
+```
+
+Tre regole tengono insieme tutto:
+
+- **Ciò che non è nella repo non esiste.** Una sessione comincia leggendo i documenti e finisce aggiornandoli.
+- **Ogni informazione ha un solo posto.** Gli altri documenti rimandano con un link.
+- **Niente di finto.** Nessun comando che non esiste, nessuna data che nessuno ha fissato, nessuna decisione che nessuno ha preso.
+
+## `new-project`: impostare la repo
+```
+/relay:new-project [cartella o nome] [riferimento]
+```
+
+Esempi:
+
+```
+/relay:new-project                               nella cartella corrente, da zero
+/relay:new-project gestionale                    in una cartella nuova
+/relay:new-project . ../prototipo                ricostruendo un prototipo
+/relay:new-project . https://github.com/org/repo ispirandosi a una repo esistente
+```
+
+Il **riferimento** è qualunque cosa il progetto debba ricostruire, copiare o migliorare: un prototipo, una versione vecchia, il prodotto di qualcun altro, una specifica, dei PDF. Viene solo letto, mai modificato.
+
+### Cosa succede
+1. **Crea i documenti**, senza fare domande. In una repo che ne ha già alcuni non sovrascrive nulla: elenca quelli che ha lasciato com'erano e li integra dopo, a mano.
+2. **Installa i plugin di supporto** (`mattpocock-skills` e `ponytail`) per quella repo soltanto, e li abilita per chi la apre. Se l'installazione non riesce ti lascia i comandi da digitare e va avanti.
+3. **Legge il riferimento per intero**, poi fa le **domande tecniche**. Chiede solo ciò che la lettura non dice, e ogni domanda ha tre parti: cosa ha trovato, cosa consiglia, cosa cambia con la risposta. Esempio:
+
+   > In `api/import.py` le query SQL sono costruite unendo stringhe. Consiglio query parametrizzate: è la prima cosa che una revisione di sicurezza fermerebbe. Se sei d'accordo diventa una correzione dentro il task dell'import, non un task a parte.
+
+   Le domande toccano: rapporto con il riferimento, cosa entra nella prima milestone, stack, struttura, dati, accessi, servizi esterni, livello di qualità, persone.
+4. **Registra le decisioni** (un ADR per ogni scelta difficile da rovesciare), il glossario e l'architettura.
+5. **Mostra l'elenco dei task e aspetta.** Per ognuno: titolo, perché esiste, cosa funziona alla fine, da cosa è bloccato. Puoi chiedere di unire, dividere, togliere, riordinare. È l'unico punto in cui la skill si ferma.
+6. **Scrive le schede**, riempie il resto dei documenti, controlla che non resti nulla di incompleto e committa sul branch `<nome>/T00-docs-setup`.
+
+Alla fine ti dice quali documenti ha scritto, quali decisioni ha registrato, quante sono le domande rimaste aperte e qual è il primo task da prendere.
+
+### Cosa non fa
+Non scrive codice di prodotto. Non fa push e non apre pull request senza chiedere. Non inventa: una scelta di stack ancora aperta diventa un ADR «proposto» e un task per deciderla.
+
+### Rilanciarla
+Si può rilanciare sulla stessa repo: salta ciò che c'è già e riprende dal primo punto incompleto.
+
+## `start-session`: aprire una sessione
+```
+/relay:start-session
+```
+
+1. **Legge i documenti**: stato, ultimo handover, piano. Solo i Markdown, non il codice. Guarda anche i branch non uniti e le pull request aperte, perché un task preso lì non compare ancora su `main`.
+2. **Riassume** in meno di dieci righe: cosa è stato fatto, cosa è in corso e di chi, cosa viene dopo.
+3. **Chiede quali task vuoi fare**, proponendo quelli che nessuno blocca e nessuno ha preso. Di quello scelto legge la scheda, lo segna a tuo nome nel piano e crea il branch.
+4. **Carica le skill** che servono a quel lavoro e ti dice quali:
+
+   | Il task richiede | Skill caricata |
+   |---|---|
+   | Di essere chiarito | `grilling` |
+   | Un disegno: confini e interfaccia di un modulo | `codebase-design` |
+   | Un termine nuovo o una decisione | `domain-modeling`, poi `/relay:adr` |
+   | Un comportamento da costruire o cambiare | `tdd` |
+   | Un difetto | `diagnosing-bugs` |
+   | Un esperimento usa e getta | `prototype` |
+   | Fatti da documentazione | `research` |
+   | Codice, sempre | `ponytail`, prima della prima riga |
+
+5. **Mostra la squadra**: quali parti fa la sessione principale e quali i subagenti, con quale modello. Aspetta il tuo ok prima di toccare un file.
+
+Se ciò che vuoi fare non è nel piano, la skill ti manda prima a `/relay:replan`. Se un plugin di supporto non è installato lo dice e prosegue senza.
+
+Funziona anche per fare solo il punto: «a che punto siamo?» si ferma al riassunto.
+
+## `replan`: cambiare il piano
+```
+/relay:replan [cosa cambia]
+```
+
+Esempi:
+
+```
+/relay:replan aggiungi l'esportazione in PDF delle fatture
+/relay:replan T12 è troppo grande, dividilo
+/relay:replan togli T09, non serve più
+/relay:replan T15 deve venire prima di T11
+/relay:replan lavorando a T07 è venuto fuori che manca la validazione degli importi
+```
+
+### I casi
+| Caso | Cosa succede |
+|---|---|
+| **Aggiungere** | Scheda e riga nuove. Prima controlla che un task esistente non lo copra già |
+| **Modificare** | Cambiano le sezioni della scheda, con una riga datata che dice cosa e perché |
+| **Dividere** | L'originale tiene il suo id con lo scopo ridotto, il resto prende un id nuovo |
+| **Unire** | Un id sopravvive e la sua scheda dice quale task ha assorbito |
+| **Riordinare** | Cambiano i blocchi tra i task; controlla che non nasca un ciclo |
+| **Togliere** | Riga e scheda vanno via; resta una riga nei non-obiettivi con il motivo |
+| **In corsa** | Un pezzo emerso a metà di un task: vedi sotto |
+
+Per un pezzo **in corsa** la skill decide con te dove va:
+
+- Senza di esso il task in corso non può dirsi finito → fa parte del task, e la scheda si corregge.
+- Può aspettare → è un task nuovo. Il task in corso non si allarga in silenzio.
+- Va fatto prima → è un task nuovo che blocca quello in corso.
+
+### Cosa succede
+1. Capisce il caso e chiede solo ciò che manca.
+2. Legge il piano, le schede coinvolte e ogni punto dei documenti che nomina quei task, anche sui branch non uniti.
+3. Calcola l'impatto: tabellone, schede, blocchi degli altri task, milestone, decisioni, glossario, architettura, stato.
+4. **Mostra il prima e il dopo**, con l'elenco dei documenti toccati, e aspetta il tuo ok.
+5. Scrive tutto insieme, controlla la coerenza e committa.
+
+### Regole che non si piegano
+- Un id non si riusa mai, nemmeno quello di un task tolto.
+- Un task già `done` non si riscrive: ciò che ha lasciato fuori è un task nuovo.
+- Il task di un'altra persona non si cambia senza sentirla.
+- Una modifica che va contro una decisione registrata richiede prima una decisione nuova (`/relay:adr`).
+- Ogni modifica lascia nella scheda la data, il motivo e chi l'ha chiesta.
+
+Una modifica che riguarda solo il task in corso si committa sul suo branch. Ogni altra va su un branch suo e in una pull request, perché il piano su `main` è quello che leggono gli altri.
+
+## `plan`, `adr`, `write-prompt`
+**`/relay:plan`**: prima di un task che tocca più di qualche file. Legge architettura, decisioni e codice coinvolto, ti chiede ciò che dovrebbe altrimenti indovinare e scrive `docs/plans/<task>-<nome>.md`: obiettivo, cosa resta fuori, approccio, squadra, passi piccoli e verificabili, test. Aspetta l'approvazione prima che si scriva codice.
+
+**`/relay:adr`**: quando si prende una scelta difficile da rovesciare (libreria, modello dei dati, autenticazione, hosting). Crea un file numerato in `docs/decisions/` con contesto, decisione, alternative e conseguenze. Una decisione accettata non si modifica: si sostituisce con una nuova.
+
+**`/relay:write-prompt [task] [opus|fable]`**: quando vuoi affidare un task intero a un'altra sessione. Scrive il prompt, pronto da incollare, per un modello orchestratore con la sua squadra di subagenti. Scrive solo il prompt: non esegue il task.
+
+## `end-session`: chiudere una sessione
+```
+/relay:end-session
+```
+
+Due casi, stessa skill.
+
+**Il task è finito:**
+
+1. Controlla il branch: mai `main`.
+2. Lancia test, lint e type-check. Se uno fallisce lo corregge e riprova.
+3. Fa rivedere il diff: l'agente `code-reviewer`, `security-auditor` se il task tocca input, accessi o pagamenti, più le revisioni dei plugin di supporto se installati.
+4. Scrive l'handover, aggiorna lo stato e la riga del task. Se è nato lavoro non previsto ti manda a `/relay:replan`.
+5. Committa: il messaggio dice cosa cambia, perché, cosa è stato scartato, come è stato verificato e cosa resta non verificato.
+6. **Chiede** se fare push e aprire la pull request. Poi controlla la CI e segna il task `in review`.
+
+**Ti fermi a metà:** scrive handover e stato, committa, e fa push solo se lo chiedi. Nessuna pull request. L'handover dice esattamente cosa è a metà e qual è la prossima mossa.
+
+In nessun caso unisce la pull request: è una decisione a parte.
+
+## I task
+Il tabellone in `docs/PLAN.md` ha una riga per task: id, titolo, milestone, da cosa è bloccato, di chi è, branch, stato. Un task si può prendere quando tutti quelli che lo bloccano sono `done`.
+
+Ogni task ha poi una scheda in `docs/tasks/`:
+
+| Sezione | Dice |
+|---|---|
+| Titolo | Cosa funziona quando è finito |
+| Why | Perché esiste e perché a questo punto: cosa sblocca, da quale decisione nasce |
+| What to build | Il comportamento alla fine, visto da chi lo usa |
+| From the reference | Dove sta l'originale; cosa si tiene, cosa si cambia e perché, cosa si toglie |
+| Done when | Controlli che si possono eseguire o vedere |
+| Out of scope | Cosa ci si aspetterebbe qui e invece sta altrove |
+| Notes | Decisioni che si applicano, domande aperte, modifiche con la data |
+
+Un task scritto male:
+
+> **T07 · Backend fatture.** Portare il codice delle fatture dal prototipo. Finito quando funziona.
+
+Lo stesso task scritto bene:
+
+> **T07 · Un cliente può creare una fattura e vederne il totale**
+>
+> **Perché.** È la prima funzione e attraversa database, API e pagina: T08–T12 ne copiano la forma, quindi un errore qui costa meno adesso. Gli importi seguono l'ADR 0006 (interi in centesimi).
+>
+> **Cosa costruire.** Un cliente che ha fatto l'accesso aggiunge righe a una fattura nuova, la salva e vede imponibile, imposta e totale; riaprendola trova gli stessi numeri.
+>
+> **Dal riferimento.** `server/invoices.js`. Si tiene: l'arrotondamento per riga. Si cambia: gli importi diventano centesimi interi, perché i decimali del prototipo perdono un centesimo su alcuni totali. Si toglie: l'esportazione CSV, che nessuno usava.
+>
+> **Finito quando.** ☐ I totali coincidono con i casi svolti nel piano. ☐ Una riga con quantità negativa è rifiutata con un messaggio che la nomina. ☐ Test, lint e type-check passano.
+>
+> **Fuori.** Il download in PDF (T08).
+
+La prova di una scheda: chi non era nella sessione, con la sola scheda, sa dire perché il task esiste, può cominciarlo senza chiedere e sa quando fermarsi.
+
+## In più persone
+- **Un task ha un solo proprietario**, scritto nel piano prima di cominciare. `start-session` guarda anche i branch non uniti, quindi un task preso da un collega risulta preso anche se `main` dice ancora `todo`.
+- **Ognuno lavora su un branch suo** (`<nome>/<task>-<descrizione>`) e apre una pull request. Mai push su `main`.
+- **Handover, decisioni e piani sono un file per voce**: nessun conflitto, e nessuno modifica il file di un altro.
+- **Chi apre la repo riceve i plugin**: `.claude/settings.json` li abilita e Claude Code propone di installarli.
+
+## Domande frequenti
+**Funziona su una repo che ha già del codice?**
+Sì. Il kit si aggiunge attorno al codice senza spostare nulla; i documenti descrivono ciò che esiste e il piano parte dai difetti di oggi.
+
+**In che lingua sono i documenti?**
+La scegli durante le domande. I titoli delle sezioni restano in inglese, perché le skill li cercano; codice, commenti e nomi in inglese.
+
+**Devo usare per forza `mattpocock-skills` e `ponytail`?**
+No. Se mancano, `start-session` ed `end-session` lo dicono e proseguono senza. Per non farli proporre a chi apre la repo, toglili da `enabledPlugins` in `.claude/settings.json`.
+
+**`ponytail` si accende in tutti i miei progetti?**
+No: `new-project` lo installa solo per quella repo.
+
+**Posso modificare una skill per il mio progetto?**
+Le skill stanno nel plugin, non nella repo, quindi si aggiornano da sole ma non si ritoccano in casa. Le regole del progetto si scrivono in `CLAUDE.md` e `CONTRIBUTING.md`, che vengono prima di ogni skill. Per una skill diversa: clona questa repo, modificala e installala con `./install.sh claude`.
+
+**Uso Codex o un altro agente.**
+Clona la repo e lancia `./install.sh codex`: collega le skill nella cartella dell'agente. Non è ancora stato provato fino in fondo.
+
+**Come aggiorno il plugin?**
+Si aggiorna con il marketplace. A mano: `/plugin marketplace update stemee-org`.
+
+**Ho lanciato `/setup-matt-pocock-skills`. È un problema?**
+Sposta glossario, decisioni e ticket in posti diversi da quelli del kit. Il kit contiene già ciò che quel setup scrive (`docs/agents/`), puntato sui propri documenti: non serve lanciarlo.
+
+**Cosa controlla lo script di verifica?**
+`scaffold.sh --check <repo>` elenca i segnaposto `{{…}}` rimasti, i task del tabellone senza scheda, le schede senza riga e quelle a cui manca il perché, il cosa o il quando è finito. Lo lanciano `new-project` e `replan`; se non stampa nulla è tutto a posto.

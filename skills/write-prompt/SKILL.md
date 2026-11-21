@@ -10,7 +10,7 @@ Invocation: `/write-prompt [task] [orchestrator]`.
 You only write the prompt. Do not run the task, do not spawn agents, do not claim anything in `PLAN.md`.
 
 ## 1. Understand the task
-1. If `task` is an id, read its entry in `docs/PLAN.md` and every ADR, plan (`docs/plans/`) and doc it links. If it is claimed by someone else, stop and tell the user.
+1. If `task` is an id, read its row in `docs/PLAN.md`, its card in `docs/tasks/` and every ADR, plan (`docs/plans/`) and doc it links. If it is claimed by someone else, stop and tell the user.
 2. Read the code the task touches, and the original in the reference if the task is a port (read-only, see `CLAUDE.md`).
 3. Measure the task: how many files, how many independent parts, how much is reading versus writing, how risky (the project's hard core, migrations, payments, security).
 
@@ -39,7 +39,7 @@ Write it in the language of the project's documents, in a single fenced block, r
 3. **Constraints from the project**: copy only those that apply from `CLAUDE.md` (never restate all of it): branch `<name>/<task-id>-<short-desc>` and pull request with no push on `main`; claim in `PLAN.md`; the conventions and ADRs the task meets; tests for new behaviour and a regression test for a fix; ADR to reverse a decision; commits explained in full. For a feature bigger than a few files, the orchestrator writes a plan and waits for approval before coding. Guides or documents a writer must read are named with their paths: subagents do not look for them on their own.
 4. **Team**: a table of the subagents: name, job, model, effort, files it owns, what it returns, and what it must wait for. Give the exact `Agent` parameters (`model`, `effort`, `subagent_type`).
 5. **Order of work**: phases, which run in parallel, where the orchestrator checks a subagent's result instead of trusting it (read the diff, run the tests).
-6. **Verification and closing**: the Test, Lint and Type-check commands of `CLAUDE.md` (and Build if what ships changes) before saying done; commit everything including docs and handover; open the pull request; report what is not verified. Never merge.
+6. **Verification and closing**: the Test, Lint and Type-check commands of `CLAUDE.md` (and Build if what ships changes) before saying done; close with `/end-session` (handover, status, commits, pull request); report what is not verified. Never merge. Work found along the way that is not in the task goes through `/replan`, not into the task in silence.
 
 Keep the prompt self-contained: the reader was not in this session, so name paths and ADR numbers, never "as discussed".
 
