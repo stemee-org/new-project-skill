@@ -1,6 +1,6 @@
 # Handovers
 
-At the end of every working session (person or Claude), write a **new** file named `YYYY-MM-DD-<author>-<topic>.md` — or run `/handover`. Never edit someone else's handover. Then update `../STATUS.md` and `../PLAN.md`.
+At the end of every working session (person or Claude), write a **new** file named `YYYY-MM-DD-<author>-<topic>.md` — or run `/end-session`. Never edit someone else's handover. Then update `../STATUS.md` and `../PLAN.md`.
 
 ## Template
 

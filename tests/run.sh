@@ -20,20 +20,28 @@ for f in CLAUDE.md CONTRIBUTING.md README.md .env.example .gitignore .editorconf
   docs/handover/README.md docs/plans/_template.md docs/tasks/_template.md \
   docs/agents/issue-tracker.md docs/agents/domain.md \
   .claude/settings.json .claude/protected-paths .claude/hooks/protect-files.sh \
-  .claude/skills/start-session/SKILL.md .claude/skills/handover/SKILL.md .claude/skills/plan/SKILL.md \
   .claude/agents/code-reviewer.md .github/workflows/ci.yml; do
   check "kit has $f" test -f "$repo/$f"
 done
 check "no dot- prefix left" bash -c "! find '$repo' -name 'dot-*' | grep -q ."
+check "the kit copies no skills (they come from the plugin)" test ! -e "$repo/.claude/skills"
 
-check "start-session in the kit is the published one" cmp -s "$here/../skills/start-session/SKILL.md" "$repo/.claude/skills/start-session/SKILL.md"
+# The plugin holds every skill of the cycle, each with a name that matches its folder.
+for skill in new-project start-session replan plan adr write-prompt end-session; do
+  check "plugin has the skill $skill" grep -qx "name: $skill" "$here/../skills/$skill/SKILL.md"
+done
+check "no skill the kit's documents name is missing" bash -c '
+  cd "$1/.." && for s in $(grep -rhoE "\`/(start-session|end-session|replan|plan|adr|write-prompt|handover|ship)\`" skills README.md | tr -d "\`/" | sort -u); do
+    test -f "skills/$s/SKILL.md" || { echo "missing $s"; exit 1; }
+  done' _ "$here"
 
-# install.sh links both skills.
+# install.sh links every skill.
 bash "$here/../install.sh" "$tmp/skills-dir" >/dev/null
-check "install.sh links new-project" test -f "$tmp/skills-dir/new-project/SKILL.md"
-check "install.sh links start-session" test -f "$tmp/skills-dir/start-session/SKILL.md"
+for skill in new-project start-session replan end-session; do
+  check "install.sh links $skill" test -f "$tmp/skills-dir/$skill/SKILL.md"
+done
 check "scaffold works through the link" bash "$tmp/skills-dir/new-project/scripts/scaffold.sh" "$tmp/linked"
-check "start-session copied through the link" test -f "$tmp/linked/.claude/skills/start-session/SKILL.md"
+check "replan finds the check script and the task guide beside it" bash -c "test -f '$tmp/skills-dir/replan/../new-project/scripts/scaffold.sh' && test -f '$tmp/skills-dir/replan/../new-project/reference/tasks.md'"
 
 # 2. Nothing is overwritten on a second run.
 echo "mine" > "$repo/CLAUDE.md"
@@ -42,9 +50,12 @@ check "second run copies nothing" grep -q "Copied 0 files" <<<"$out"
 check "existing file kept" grep -qx "mine" "$repo/CLAUDE.md"
 
 # 3. Settings enable both plugins and are valid JSON.
-check "settings.json is valid JSON and enables both plugins" python3 - "$repo/.claude/settings.json" <<'PY'
+check "settings.json is valid JSON and enables the three plugins" python3 - "$repo/.claude/settings.json" "$here/../.claude-plugin/plugin.json" <<'PY'
 import json, sys
 d = json.load(open(sys.argv[1]))
+name = json.load(open(sys.argv[2]))["name"]
+assert d["enabledPlugins"][name + "@stemee-org"] is True, "the kit must enable this plugin"
+assert d["extraKnownMarketplaces"]["stemee-org"]["source"]["source"] == "github"
 assert d["enabledPlugins"]["mattpocock-skills@claude-plugins-official"] is True
 assert d["enabledPlugins"]["ponytail@ponytail"] is True
 assert d["extraKnownMarketplaces"]["ponytail"]["source"] == {"source": "github", "repo": "DietrichGebert/ponytail"}

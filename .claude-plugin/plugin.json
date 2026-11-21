@@ -1,7 +1,7 @@
 {
-  "name": "new-project",
-  "description": "Two skills for the documentation-first method. new-project sets up a repo: documentation kit (CLAUDE.md, plan, task cards, status, ADRs, handovers, project skills, hooks, review agents), the mattpocock-skills and ponytail plugins, and tasks that explain themselves, also from a prototype or other reference. start-session opens each working session: reads the documents, asks which tasks, loads the plugin skills the work needs.",
-  "version": "0.2.0",
+  "name": "relay",
+  "description": "The documentation-first method as one plugin: every session starts from the repo's documents and ends by updating them, so the next one can pick up any task. new-project sets up a repo (documentation kit, the mattpocock-skills and ponytail plugins, tasks that explain themselves, also from a prototype). start-session, replan, plan, adr, write-prompt and end-session run the working cycle.",
+  "version": "0.3.0",
   "author": {
     "name": "stemee"
   },

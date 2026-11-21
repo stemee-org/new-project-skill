@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Links the skills into an agent's personal skills folder, so `git pull` here updates them everywhere.
-#   ./install.sh claude          -> ${CLAUDE_CONFIG_DIR:-~/.claude}/skills/{new-project,start-session}
-#   ./install.sh codex           -> ${CODEX_HOME:-~/.codex}/skills/{new-project,start-session}
-#   ./install.sh <skills-dir>    -> <skills-dir>/{new-project,start-session}
+#   ./install.sh claude          -> ${CLAUDE_CONFIG_DIR:-~/.claude}/skills/<each skill>
+#   ./install.sh codex           -> ${CODEX_HOME:-~/.codex}/skills/<each skill>
+#   ./install.sh <skills-dir>    -> <skills-dir>/<each skill>
 set -euo pipefail
 here=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)
 case "${1:-}" in
@@ -12,7 +12,8 @@ case "${1:-}" in
   *)      dir="$1" ;;
 esac
 mkdir -p "$dir"
-for skill in new-project start-session; do
+for src in "$here"/skills/*/; do
+  skill=$(basename "$src")
   dest="$dir/$skill"
   if [ -L "$dest" ]; then rm "$dest"
   elif [ -e "$dest" ]; then echo "$dest exists and is not a link: move it away first." >&2; exit 1

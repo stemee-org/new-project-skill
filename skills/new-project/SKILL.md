@@ -9,14 +9,14 @@ The output is a repository where a person or an agent that was never in this con
 The order is fixed, and the first two steps need no answer from the user, so run them straight away:
 
 1. **Kit**: from zero files to every documentation file.
-2. **Plugins**: `mattpocock-skills` and `ponytail`.
+2. **Plugins**: `mattpocock-skills` and `ponytail`, beside this plugin (`relay`), which the kit enables.
 3. **Questions and tasks**: read the reference, ask what reading cannot answer, write the tasks.
 
 Then fill the rest of the documents (4), check (5), commit and hand over (6). There is one point where you stop and wait: the task breakdown in step 3.
 
 Files of this skill, in the folder that holds this `SKILL.md` (written `<skill>` below; in Claude Code it is `${CLAUDE_SKILL_DIR}`). Read each when its step says so:
 - `<skill>/scripts/scaffold.sh`: copies the kit without overwriting; `--check` lists what is still unfilled.
-- `<skill>/templates/`: the kit. The script adds to it the `start-session` skill, which lives beside this one (`<skill>/../start-session`) because it is also published on its own.
+- `<skill>/templates/`: the kit. It holds no skills: those of the working cycle (`start-session`, `replan`, `plan`, `adr`, `write-prompt`, `end-session`) are beside this one, in the same plugin, and the kit's `.claude/settings.json` enables it.
 - `<skill>/reference/from-reference.md`: how to read a reference and where each finding goes.
 - `<skill>/reference/tasks.md`: the technical questions and what makes a task good.
 - `<skill>/reference/method.md`: what each document is for and the rules behind the method.
@@ -47,7 +47,7 @@ Project scope installs them for this repo and leaves the user's other projects a
 - If `claude` is not on the `PATH` or a command fails, do not stop: give the user the lines to type themselves (`/plugin install mattpocock-skills@claude-plugins-official`, `/plugin marketplace add DietrichGebert/ponytail`, `/plugin install ponytail@ponytail`), write in the handover that the plugins are still to install, and go on.
 - A plugin installed now is not loaded in this session: its skills work after `/reload-plugins` or in the next session. So nothing in the steps below depends on them; say so in the final report.
 - Install only from those two sources. Ponytail's author states it ships from `DietrichGebert/ponytail` and nowhere else.
-- The kit's `.claude/settings.json` already enables both for the repo, so Claude Code offers them to whoever opens it. If an install changes that file, keep the change and commit it. The kit also ships what the `mattpocock-skills` engineering skills look for (`docs/agents/issue-tracker.md`, `docs/agents/domain.md`, the `Agent skills` block of `CLAUDE.md`), pointing at this method's documents: `/setup-matt-pocock-skills` does not need to be run, and running it would move tasks and glossary somewhere else.
+- The kit's `.claude/settings.json` already enables both for the repo, together with this plugin (`relay@stemee-org`, which brings `/start-session`, `/replan`, `/plan`, `/adr`, `/write-prompt` and `/end-session`), so Claude Code offers the three to whoever opens it. If this skill is running from a linked copy and not from the plugin, install it too: `claude plugin marketplace add stemee-org/relay --scope project`, then `claude plugin install relay@stemee-org --scope project`. If an install changes that file, keep the change and commit it. The kit also ships what the `mattpocock-skills` engineering skills look for (`docs/agents/issue-tracker.md`, `docs/agents/domain.md`, the `Agent skills` block of `CLAUDE.md`), pointing at this method's documents: `/setup-matt-pocock-skills` does not need to be run, and running it would move tasks and glossary somewhere else.
 - Then `claude plugin details <plugin>` for each and correct `CONTRIBUTING.md`, «Plugins», against what is really installed: drop a skill that is not listed, add one the project will use. Never describe a plugin skill from memory.
 
 Codex: `codex plugin marketplace add mattpocock/skills`, `codex plugin add mattpocock-skills@mattpocock`, `codex plugin marketplace add DietrichGebert/ponytail`, `codex plugin add ponytail@ponytail`. Any other agent: follow each repo's README; if there is no way to install, say so and go on.
@@ -72,7 +72,7 @@ Read `reference/method.md`. Decisions, glossary, architecture, plan and tasks ar
 3. `README.md`: what it is, state, how to start, structure. For people, short.
 4. `.env.example` (every variable, placeholders only), `.gitignore`, `.claude/protected-paths` (generated files, with the command that regenerates each), `.claude/settings.json` (allow the stack's test, lint, type-check and build commands; ask for dependency changes and pushes; deny the package managers the project does not use).
 5. `.github/`: keep the generic CI until the scaffold task replaces it; note in the handover what it will and will not do on the first push.
-6. `docs/STATUS.md` and the first handover in `docs/handover/`. In `Watch out`, list everything written from reading and not confirmed by a person: those are the lines someone must re-read.
+6. `docs/STATUS.md` and the first handover in `docs/handover/` (from the template in its `README.md`). In `Watch out`, list everything written from reading and not confirmed by a person: those are the lines someone must re-read.
 7. If anyone on the project uses Codex or another agent: an `AGENTS.md` of two lines at the root that sends the agent to `CLAUDE.md` and `CONTRIBUTING.md`, so the rules live in one place.
 
 Each fact goes in one document and the others link to it. Do not pad: a section with one honest line («nothing yet») beats invented content.
@@ -87,4 +87,4 @@ Each fact goes in one document and the others link to it. Do not pad: a section 
 ## 6. Commit and hand over
 - Commit on `<name>/T00-docs-setup` with a message that says what was written, from which sources, what the user chose in this session and what is still unconfirmed.
 - Creating a remote, pushing and opening a pull request are outward-facing: ask first. Never push to `main`, never merge without being asked.
-- End with a short report: the documents written, the decisions recorded, the tasks (how many, per milestone), the open questions, whether the two plugins are installed and that they load after `/reload-plugins`, and the first task to take, with the reminder that the next session starts with `/start-session`.
+- End with a short report: the documents written, the decisions recorded, the tasks (how many, per milestone), the open questions, whether the two plugins are installed and that they load after `/reload-plugins`, and the first task to take, with the reminder that the next session starts with `/start-session`, ends with `/end-session`, and that the plan changes with `/replan`.

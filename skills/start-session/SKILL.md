@@ -19,7 +19,7 @@ Only the Markdown documents, not the codebase: the code is read later, for the t
 3. Summarize in under 10 lines: what was done, what is in progress (by whom, with the branch or pull request), what comes next. List each unmerged branch in one line.
 
 ## 2. Ask which tasks
-1. Ask the user which task or tasks they want to do. Propose those that nothing blocks (every task in «Blocked by» is `done`) and nobody has claimed, each with one line on why it comes now.
+1. Ask the user which task or tasks they want to do. Propose those that nothing blocks (every task in «Blocked by» is `done`) and nobody has claimed, each with one line on why it comes now. If what they want is not on the board, or a task needs to change first, that is `/replan`: do it before claiming.
 2. For each task chosen, read its card in `docs/tasks/` and what it links (ADRs, its plan in `docs/plans/`). If it is claimed by someone else, on `main` or on any branch from step 1, stop and tell the user.
 3. Claim it in `PLAN.md` (owner and branch) on its own branch from `origin/main`. Several tasks are taken one at a time, each on its own branch, unless the user says otherwise.
 4. Rename the session with `mcp__ccd_session_mgmt__set_session_title` (`session_id: "self"`): the task id plus a short description, e.g. `T09 · login form`; with no task chosen (only a catch-up), what the session is for, e.g. `Catch-up 2026-11-14`. Never leave the default "New session". Load the tool with `ToolSearch` (`select:mcp__ccd_session_mgmt__set_session_title`) if it is only deferred; if it is not available at all, say so and move on.
@@ -49,3 +49,5 @@ Before changing any file, without being asked (`CONTRIBUTING.md`, «How a task i
 - Name the model this session runs on. The orchestrator must be the best one available (named in `CLAUDE.md`, «Rules»): if it is another model, say so first and ask whether to go on.
 - Print a table with wave, subtask, model, effort and why, and next to it the skills loaded in step 3. If the task has a plan in `docs/plans/`, the table is its `Team` section; otherwise propose one from the table in `CONTRIBUTING.md` («Models and efforts»). A task of a few files gets a single row («orchestrator, no subagent»): show it anyway.
 - Wait for the user's go-ahead. A task bigger than a few files with no plan yet goes through `/plan` first.
+
+While working: something that is not in the task's card goes through `/replan`, which decides with the user whether it belongs to this task or is a new one. The session closes with `/end-session`.

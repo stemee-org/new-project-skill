@@ -11,6 +11,8 @@ For the skills that talk about «issues» or «tickets» (`to-tickets`, `to-spec
 ## When a skill says «publish to the issue tracker»
 Show the breakdown in chat and get it approved. Then, for each ticket in dependency order: take the next free `T<nn>`, write its card, add its row to the board with its blockers. Titles use the words of `docs/GLOSSARY.md`.
 
+Changing, splitting, merging or dropping a task that exists goes through `/replan`, which also updates the documents that depend on it.
+
 ## When a skill says «fetch the relevant ticket»
 Read the task's row on the board, its card, and its plan in `docs/plans/` if there is one.
 

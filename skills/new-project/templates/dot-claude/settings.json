@@ -1,6 +1,12 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "extraKnownMarketplaces": {
+    "stemee-org": {
+      "source": {
+        "source": "github",
+        "repo": "stemee-org/relay"
+      }
+    },
     "ponytail": {
       "source": {
         "source": "github",
@@ -9,6 +15,7 @@
     }
   },
   "enabledPlugins": {
+    "relay@stemee-org": true,
     "mattpocock-skills@claude-plugins-official": true,
     "ponytail@ponytail": true
   },

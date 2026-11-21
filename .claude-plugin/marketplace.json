@@ -1,14 +1,14 @@
 {
   "name": "stemee-org",
-  "description": "Skills from stemee for the documentation-first method: new-project sets up a repo, start-session opens each working session.",
+  "description": "Skills from stemee for the documentation-first method, in one plugin.",
   "owner": {
     "name": "stemee"
   },
   "plugins": [
     {
-      "name": "new-project",
+      "name": "relay",
       "source": "./",
-      "description": "new-project: documentation kit, the mattpocock-skills and ponytail plugins, and reasoned tasks from a prototype or any other reference. start-session: read the documents, choose the tasks, load the skills the work needs."
+      "description": "Set up a repo with the documentation-first method (new-project) and run its working cycle: start-session, replan, plan, adr, write-prompt, end-session."
     }
   ]
 }

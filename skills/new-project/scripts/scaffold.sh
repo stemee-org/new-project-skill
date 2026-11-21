@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 # Copies the project kit into a repository without overwriting anything.
-#   scaffold.sh <target-dir>           copy templates/ (a "dot-" prefix becomes ".") and the
-#                                      start-session skill from ../../start-session
+#   scaffold.sh <target-dir>           copy templates/ (a "dot-" prefix becomes ".")
 #   scaffold.sh --check <target-dir>   list what is still unfilled: setup placeholders ({{…}}),
 #                                      tasks on the board with no card, cards that do not say
 #                                      why, what or when the task is done
@@ -70,9 +69,6 @@ while IFS= read -r -d '' src; do
   # dot-claude/hooks/x.sh -> .claude/hooks/x.sh ; dot-gitignore -> .gitignore
   copy "$src" "$(printf '%s' "$rel" | sed -E 's#(^|/)dot-#\1.#g')"
 done < <(find "$templates" -type f ! -name '.DS_Store' -print0 | sort -z)
-
-# start-session is also published on its own (skills/start-session): the kit takes that copy.
-copy "$here/../../start-session/SKILL.md" ".claude/skills/start-session/SKILL.md"
 
 chmod +x "$target"/.claude/hooks/*.sh 2>/dev/null || true
 
