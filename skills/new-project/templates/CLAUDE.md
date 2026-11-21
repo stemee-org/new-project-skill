@@ -36,9 +36,18 @@
 ## Docs
 - Start of session: run `/start-session` (or read `docs/STATUS.md` + latest `docs/handover/`).
 - End of session: run `/handover`.
-- Plan and task ownership: `docs/PLAN.md`. Never start a task claimed by someone else.
+- Plan and task ownership: `docs/PLAN.md`; what each task is and why: its card in `docs/tasks/`. Never start a task claimed by someone else.
 - Why things are the way they are: `docs/decisions/`. Don't reverse a decision without a new ADR (`/adr`).
 - Each fact lives in one doc; link, don't copy.
+
+## Agent skills
+What the skills of the `mattpocock-skills` plugin look for. Written by the kit: `/setup-matt-pocock-skills` is not to be run here.
+
+### Issue tracker
+Tasks live in this repo: board in `docs/PLAN.md`, one card per task in `docs/tasks/`. See `docs/agents/issue-tracker.md`.
+
+### Domain docs
+Single-context: `docs/GLOSSARY.md` and the ADRs in `docs/decisions/`. See `docs/agents/domain.md`.
 
 ## Gotchas
 - Notes that only matter in one part of the repo go in that folder's `CLAUDE.md`; here stay those of the whole repo.

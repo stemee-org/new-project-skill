@@ -1,11 +1,14 @@
 {
   "name": "stemee-org",
-  "owner": { "name": "stemee" },
+  "description": "Skills from stemee: the new-project skill, which sets up a repo with the documentation-first method.",
+  "owner": {
+    "name": "stemee"
+  },
   "plugins": [
     {
       "name": "new-project",
       "source": "./",
-      "description": "Set up a new project with the documentation-first method, also starting from a prototype or any other reference."
+      "description": "Set up a new project with the documentation-first method: documentation kit, the mattpocock-skills and ponytail plugins, and reasoned tasks from a prototype or any other reference."
     }
   ]
 }

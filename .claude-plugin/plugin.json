@@ -1,6 +1,8 @@
 {
   "name": "new-project",
-  "description": "Set up a new project with the documentation-first method (CLAUDE.md, plan, status, ADRs, handovers, project skills, hooks, review agents), also starting from a prototype or any other reference to rebuild or improve on.",
-  "version": "0.1.0",
-  "author": { "name": "stemee" }
+  "description": "Set up a new project with the documentation-first method: copies the documentation kit (CLAUDE.md, plan, task cards, status, ADRs, handovers, project skills, hooks, review agents), installs the mattpocock-skills and ponytail plugins, then reads any prototype or other reference, asks the technical questions and writes tasks that explain themselves.",
+  "version": "0.2.0",
+  "author": {
+    "name": "stemee"
+  }
 }

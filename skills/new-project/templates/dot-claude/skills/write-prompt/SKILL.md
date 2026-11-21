@@ -10,7 +10,7 @@ Invocation: `/write-prompt [task] [orchestrator]`.
 You only write the prompt. Do not run the task, do not spawn agents, do not claim anything in `PLAN.md`.
 
 ## 1. Understand the task
-1. If `task` is an id, read its entry in `docs/PLAN.md` and every ADR, plan (`docs/plans/`) and doc it links. If it is claimed by someone else, stop and tell the user.
+1. If `task` is an id, read its row in `docs/PLAN.md`, its card in `docs/tasks/` and every ADR, plan (`docs/plans/`) and doc it links. If it is claimed by someone else, stop and tell the user.
 2. Read the code the task touches, and the original in the reference if the task is a port (read-only, see `CLAUDE.md`).
 3. Measure the task: how many files, how many independent parts, how much is reading versus writing, how risky (the project's hard core, migrations, payments, security).
 

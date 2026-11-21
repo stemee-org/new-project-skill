@@ -12,7 +12,7 @@ Work that is not on `main` yet lives on other branches and in open pull requests
    - What those branches say about the plan: `git diff origin/main...<branch> -- docs/PLAN.md docs/STATUS.md` (three dots: only their changes). A task claimed or moved forward there counts as claimed, even if `main` still says `todo`.
    - Recently merged pull requests (`gh pr list --state merged -L 5`): if `PLAN.md` or `STATUS.md` still call one of them open, say so.
 4. Summarize in under 10 lines: current state, what's in progress (and by whom, with the branch or pull request), the top next step. List each unmerged branch in one line.
-5. Ask which task to work on. Before starting it, claim it in `PLAN.md` if unclaimed, on its own branch from `origin/main`.
+5. Ask which task to work on, proposing those that nothing blocks (every task in «Blocked by» is `done`). Read its card in `docs/tasks/`. Before starting it, claim it in `PLAN.md` if unclaimed, on its own branch from `origin/main`.
 6. If the task is claimed by someone else, on `main` or on any branch from step 3, stop and tell the user.
 7. Once the task is chosen, rename the session with `mcp__ccd_session_mgmt__set_session_title` (`session_id: "self"`). Never leave the default "New session": the title is the task id plus a short description, e.g. `T09 · login form`. If no task is chosen (only a catch-up), use a title that says what the session is for, e.g. `Catch-up 2026-11-14`. Load the tool with `ToolSearch` (`select:mcp__ccd_session_mgmt__set_session_title`) if it is only deferred; if it is not available at all, say so and move on.
 8. Once the task is chosen, and before changing any file, show the team in chat without being asked (`CONTRIBUTING.md`, «How a task is built»):

@@ -3,12 +3,14 @@
 | File | What it's for | Who updates it |
 |---|---|---|
 | [PLAN.md](PLAN.md) | Goals, milestones, who's working on what | Anyone claiming/finishing a task |
+| [tasks/](tasks/) | One card per task: why it exists, what to build, when it is done | When a task is created or its scope changes |
 | [STATUS.md](STATUS.md) | What's true right now | End of every session |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | How the system fits together | When structure changes |
 | [GLOSSARY.md](GLOSSARY.md) | Project terms | When a new term appears |
 | [decisions/](decisions/) | Why we chose X over Y | When a decision is made |
 | [handover/](handover/) | Session-by-session log | End of every session |
 | [plans/](plans/) | Feature plans written before coding | Before a feature bigger than a few files |
+| [agents/](agents/) | Where plugin skills find tasks, glossary and ADRs | When those move |
 
 Created when first needed: `proposals/` (proposals as they were presented; what gets decided moves to an ADR) and `reviews/` (review material of a task, one folder per task).
 

@@ -2,7 +2,7 @@
 name: plan
 description: Write a feature plan in docs/plans/ before coding. Use when the user asks to plan, design or scope a feature, or before any change touching more than a few files.
 ---
-1. Find or create the task in `docs/PLAN.md`; if someone else owns it, stop and tell the user.
+1. Find the task in `docs/PLAN.md` and read its card in `docs/tasks/`; if there is none, create row and card (`docs/tasks/_template.md`). If someone else owns it, stop and tell the user.
 2. Read `docs/ARCHITECTURE.md`, relevant ADRs in `docs/decisions/`, and the code the feature touches. If the task ports something from a reference, read the original too and write in `Approach` what is kept, what changes and why, and what is dropped. Don't write code yet.
 3. Ask the user about anything you would otherwise have to guess (scope, UX, data shape).
 4. Write `docs/plans/<task-id>-<short-name>.md` from `docs/plans/_template.md`. Steps must be small, each leaving the app working and testable.

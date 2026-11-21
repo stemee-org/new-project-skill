@@ -3,7 +3,7 @@
 A «reference» is anything the new project is meant to rebuild, copy or do better than: our own prototype, an older version of the product, someone else's product or open-source repo, a specification, a design file, a set of PDFs. The reference is evidence to read, not a base to copy.
 
 ## 1. Name the relationship
-Decide it with the user first; it becomes ADR `0002` and the first paragraph of `CLAUDE.md`.
+Propose it after reading (§3) and decide it with the user: it is the first of the technical questions (`tasks.md`). It becomes ADR `0002` and the first paragraph of `CLAUDE.md`.
 
 | Relationship | When | What it means |
 |---|---|---|
@@ -36,7 +36,7 @@ Code, README and documents, git history (`git log`, `git shortlog -sn`), open is
 | Relationship and pin | ADR `0002`, `CLAUDE.md` | One decision, alternatives included (fix in place; copy wholesale then tidy) |
 | Decisions already made | One ADR each | Add an `Origin` line: where and when it was born. `Date` is the day it is recorded. `accepted` only if the user confirms it was really agreed; otherwise `proposed`. Say in the index which numbers are inherited |
 | Decisions we now take differently | ADR with the old choice among the alternatives | This is the «do better» part: say what was wrong |
-| Features | Tasks in `PLAN.md` | One task per portable piece, with «from: <path in the reference>». Order: foundations first, then the core, then what depends on it |
+| Features | Tasks: a card in `docs/tasks/` and a row in `PLAN.md` | One task per portable piece, with where the original lives and what is kept, changed and dropped. How to slice and write them: `tasks.md` |
 | Defects | `PLAN.md`, section «Known defects of the reference not to carry over» | One line each, with the task or ADR that fixes it |
 | Not finished, new ideas | The last milestone, after parity | New features before parity are a non-goal |
 | Terms | `GLOSSARY.md` | One name per thing; the column «not to be confused with» holds the old synonyms |
@@ -56,7 +56,7 @@ The plan's goal says what «parity» means and how we know it is reached. Typica
 And in `CONTRIBUTING.md`: porting = read the original, apply the ADRs and the corrections named in the task, add the tests.
 
 ## 6. For every part: keep, change, drop
-The point is not parity, it is doing better. For each area write, in the task or its plan, what is kept as it is, what changes and why, and what is dropped. A part ported with no line under «change» was either perfect or not looked at.
+The point is not parity, it is doing better. For each area write, in the task's card («From the reference»), what is kept as it is, what changes and why, and what is dropped. A part ported with no line under «change» was either perfect or not looked at.
 
 ## 7. Before closing the session
 - List in the handover's `Watch out` everything inferred from reading: inherited ADRs marked `accepted`, area owners, counts, dates left open.

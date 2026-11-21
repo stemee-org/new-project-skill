@@ -9,6 +9,7 @@ Several people, each with their own Claude Code, work on one repo at different t
 - **Claim before you start.** A task has one owner, written in `PLAN.md` before work begins.
 - **Short beats complete.** A document nobody reads protects nothing.
 - **Written from reading is not confirmed.** What a session inferred is marked as such until a person confirms it.
+- **A task explains itself.** Someone who was not there can say why it exists, start it and tell when to stop, from the card alone.
 - **Nothing fake.** No command that does not exist, no date nobody fixed, no decision nobody took.
 
 ## The documents
@@ -19,6 +20,8 @@ Several people, each with their own Claude Code, work on one repo at different t
 | `README.md` | What this is and how to start, for people | Rarely |
 | `CONTRIBUTING.md` | How we work: branches, the team practice, models, area owners, plugins | When the practice changes; say who asked and when |
 | `docs/PLAN.md` | Goal, non-goals, milestones, task board, open questions | Claiming or finishing a task |
+| `docs/tasks/` | One card per task: why it exists, what to build, when it is done. The board row holds what changes (owner, status, blockers), the card what does not | When a task is created or its scope changes |
+| `docs/agents/` | Where plugin skills find tasks, glossary and ADRs | When those move |
 | `docs/STATUS.md` | What is true right now, one screen | End of every session, overwritten |
 | `docs/ARCHITECTURE.md` | How the system fits together, folder level | When the structure changes |
 | `docs/GLOSSARY.md` | The project's words, one meaning each | When a term appears |
