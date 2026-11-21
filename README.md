@@ -95,5 +95,8 @@ The method was born while rebuilding stemee from a prototype (November 2026): th
 
 Whoever changes a rule of the method changes it in `method.md`, in the templates that repeat it and in the skills that apply it: `grep` for the old wording before committing. The documentation exists in English and Italian: a change goes in both (`README.md` and `README.it.md`, `docs/guide.md` and `docs/guida.md`).
 
+## Code of conduct
+Taking part in this project means following its [code of conduct](CODE_OF_CONDUCT.md). Unacceptable behaviour can be reported to relay@stemee.eu.
+
 ## Licence
 [MIT](LICENSE).
