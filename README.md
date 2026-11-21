@@ -12,7 +12,7 @@ Il metodo nasce dalla ricostruzione di stemee a partire da un prototipo (novembr
 `/new-project [cartella o nome] [riferimento]`
 
 1. **Kit.** Copia i documenti nella cartella senza sovrascrivere nulla e li committa. Non chiede niente.
-2. **Plugin.** Installa `mattpocock-skills` e `ponytail` e li abilita per chi apre la repo. Il kit contiene già i file che le skill di `mattpocock-skills` cercano (`docs/agents/`), puntati sui documenti del metodo: non serve lanciare `/setup-matt-pocock-skills`. I plugin si caricano dopo `/reload-plugins` o alla sessione successiva.
+2. **Plugin.** Installa `mattpocock-skills` e `ponytail` per quella repo (non per gli altri progetti di chi la lancia) e li abilita per chi la apre. Il kit contiene già i file che le skill di `mattpocock-skills` cercano (`docs/agents/`), puntati sui documenti del metodo: non serve lanciare `/setup-matt-pocock-skills`. I plugin si caricano dopo `/reload-plugins` o alla sessione successiva.
 3. **Domande e task.** Legge il riferimento, poi fa le domande tecniche: ognuna dice cosa ha trovato, cosa consiglia e cosa cambia con la risposta. Registra le decisioni (ADR, glossario, architettura), mostra in chat l'elenco dei task e **aspetta l'ok**; solo allora scrive una scheda per task in `docs/tasks/` e la riga nel tabellone di `docs/PLAN.md`. Senza riferimento le domande sono sul prodotto e i task nascono dalle risposte.
 4. **Resto dei documenti**: `CLAUDE.md`, `CONTRIBUTING.md`, `README.md`, configurazione, stato e primo handover.
 5. **Controllo**: nessun segnaposto rimasto, ogni task ha la sua scheda, link e hook a posto.
@@ -51,7 +51,10 @@ Con più profili di Claude Code si lancia una volta per profilo, con `CLAUDE_CON
 - `.claude-plugin/`: manifest del plugin e del marketplace.
 
 ## Stato
-Versione 0.2.0. Provati con `./tests/run.sh`: la copia del kit da zero, i file esistenti lasciati intatti, gli hook, `settings.json` valido con i due plugin abilitati, il controllo dei task. Provata la validazione del plugin (`claude plugin validate .`). Non ancora provati: il percorso dall'inizio alla fine su un progetto vero, l'installazione di `ponytail` dai comandi della skill, l'uso dentro Codex.
+Versione 0.2.0. Provati con `./tests/run.sh`: la copia del kit da zero, i file esistenti lasciati intatti, gli hook, `settings.json` valido con i due plugin abilitati, il controllo dei task. Provata la validazione del plugin (`claude plugin validate .`). `tests/run.sh` gira anche in CI a ogni pull request. Non ancora provati: il percorso dall'inizio alla fine su un progetto vero, l'installazione dei due plugin con i comandi della skill, l'uso dentro Codex.
+
+## Licenza
+[MIT](LICENSE).
 
 ## Modificarla
 Il kit è in inglese; la lingua dei documenti del progetto si sceglie nell'intervista. Chi cambia una regola del metodo la cambia in `reference/method.md` e nei template che la ripetono (`CLAUDE.md`, `CONTRIBUTING.md`, le skill in `templates/dot-claude/skills/`): si cerca la vecchia formulazione con `grep` prima di committare.

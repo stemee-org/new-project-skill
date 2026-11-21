@@ -33,17 +33,21 @@ Every document now exists, with `{{…}}` where the project's own content goes. 
 ## 2. Plugins
 Invoking this skill is the request to install them: say what you run and run it, without asking again.
 
+Run from the target directory:
+
 ```
-claude plugin install mattpocock-skills@claude-plugins-official
-claude plugin marketplace add DietrichGebert/ponytail
-claude plugin install ponytail@ponytail
+claude plugin install mattpocock-skills@claude-plugins-official --scope project
+claude plugin marketplace add DietrichGebert/ponytail --scope project
+claude plugin install ponytail@ponytail --scope project
 ```
+
+Project scope installs them for this repo and leaves the user's other projects as they were: ponytail is on in every session where it is installed. If the user asks for them everywhere, drop `--scope project`.
 
 - Check first with `claude plugin list`: skip what is already there.
 - If `claude` is not on the `PATH` or a command fails, do not stop: give the user the lines to type themselves (`/plugin install mattpocock-skills@claude-plugins-official`, `/plugin marketplace add DietrichGebert/ponytail`, `/plugin install ponytail@ponytail`), write in the handover that the plugins are still to install, and go on.
 - A plugin installed now is not loaded in this session: its skills work after `/reload-plugins` or in the next session. So nothing in the steps below depends on them; say so in the final report.
 - Install only from those two sources. Ponytail's author states it ships from `DietrichGebert/ponytail` and nowhere else.
-- The kit's `.claude/settings.json` already enables both for the repo, so Claude Code offers them to whoever opens it. The kit also ships what the `mattpocock-skills` engineering skills look for (`docs/agents/issue-tracker.md`, `docs/agents/domain.md`, the `Agent skills` block of `CLAUDE.md`), pointing at this method's documents: `/setup-matt-pocock-skills` does not need to be run, and running it would move tasks and glossary somewhere else.
+- The kit's `.claude/settings.json` already enables both for the repo, so Claude Code offers them to whoever opens it. If an install changes that file, keep the change and commit it. The kit also ships what the `mattpocock-skills` engineering skills look for (`docs/agents/issue-tracker.md`, `docs/agents/domain.md`, the `Agent skills` block of `CLAUDE.md`), pointing at this method's documents: `/setup-matt-pocock-skills` does not need to be run, and running it would move tasks and glossary somewhere else.
 - Then `claude plugin details <plugin>` for each and correct `CONTRIBUTING.md`, «Plugins», against what is really installed: drop a skill that is not listed, add one the project will use. Never describe a plugin skill from memory.
 
 Codex: `codex plugin marketplace add mattpocock/skills`, `codex plugin add mattpocock-skills@mattpocock`, `codex plugin marketplace add DietrichGebert/ponytail`, `codex plugin add ponytail@ponytail`. Any other agent: follow each repo's README; if there is no way to install, say so and go on.
