@@ -114,6 +114,7 @@ same_shape() {  # same number of headings, table rows and code fences in both fi
   done
 }
 check "README.md and README.it.md have the same structure" same_shape "$here/../README.md" "$here/../README.it.md"
+check "the two codes of conduct have the same structure" same_shape "$here/../CODE_OF_CONDUCT.md" "$here/../CODE_OF_CONDUCT.it.md"
 check "docs/guide.md and docs/guida.md have the same structure" same_shape "$here/../docs/guide.md" "$here/../docs/guida.md"
 check "every command in the English docs exists as a skill" bash -c '
   cd "$1/.." && for s in $(grep -hoE "/relay:[a-z-]+" README.md docs/guide.md | sed "s#/relay:##" | sort -u); do

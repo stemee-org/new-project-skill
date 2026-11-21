@@ -95,5 +95,8 @@ Il metodo nasce dalla ricostruzione di stemee a partire da un prototipo (novembr
 
 Chi cambia una regola del metodo la cambia in `method.md`, nei template che la ripetono e nelle skill che la applicano: si cerca la vecchia formulazione con `grep` prima di committare. La documentazione esiste in inglese e in italiano: una modifica va in entrambe (`README.md` e `README.it.md`, `docs/guide.md` e `docs/guida.md`).
 
+## Codice di comportamento
+Partecipare a questo progetto significa rispettarne il [codice di comportamento](CODE_OF_CONDUCT.it.md). Un comportamento inaccettabile si segnala a relay@stemee.eu.
+
 ## Licenza
 [MIT](LICENSE).
