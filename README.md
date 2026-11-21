@@ -1,19 +1,21 @@
 # relay
 
-Un plugin per Claude Code che fa lavorare un progetto «prima i documenti»: ogni sessione parte dai documenti della repo e finisce aggiornandoli. Come in una staffetta, il testimone sono i documenti.
+**English** · [Italiano](README.it.md)
 
-## A cosa serve
-Un agente di programmazione non ricorda la sessione precedente, e nemmeno un collega sa cosa hai fatto ieri con il tuo. Ciò che non è scritto nella repo va perso: si rifà lavoro già fatto, si riapre una decisione già presa, due persone prendono lo stesso task.
+A Claude Code plugin that makes a project work documentation-first: every session starts from the repo's documents and ends by updating them. As in a relay race, the documents are the baton.
 
-`relay` risolve questo con tre cose:
+## What it is for
+A coding agent does not remember the previous session, and a colleague does not know what you did yesterday with yours. Whatever is not written in the repo is lost: work gets redone, a decision already taken is reopened, two people pick the same task.
 
-- **Un posto per ogni informazione.** Cosa si sta costruendo, quali task restano, perché è stata fatta una scelta, cosa è successo nell'ultima sessione: ognuna ha il suo documento.
-- **Task che si spiegano da soli.** Ogni task ha una scheda che dice perché esiste, cosa deve funzionare alla fine e quando è finito. Chi non c'era può cominciarlo senza chiedere.
-- **Un ciclo fisso.** Sette comandi coprono la vita del progetto: impostarlo, aprire una sessione, cambiare il piano, chiuderla.
+`relay` solves this with three things:
 
-È pensato per chi lavora con Claude Code da solo o in più persone sulla stessa repo, su un progetto nuovo o su uno da ricostruire a partire da un prototipo.
+- **One place for each piece of information.** What is being built, which tasks are left, why a choice was made, what happened in the last session: each has its own document.
+- **Tasks that explain themselves.** Every task has a card that says why it exists, what must work at the end and when it is done. Someone who was not there can start it without asking.
+- **A fixed cycle.** Seven commands cover the life of the project: setting it up, opening a session, changing the plan, closing the session.
 
-## Installazione
+It is meant for people working with Claude Code, alone or several on the same repo, on a new project or on one to rebuild from a prototype.
+
+## Installation
 In Claude Code:
 
 ```
@@ -21,77 +23,77 @@ In Claude Code:
 /plugin install relay@stemee-org
 ```
 
-Poi `/reload-plugins`, oppure apri una sessione nuova. Servono `git` e, per le pull request, la CLI `gh`.
+Then `/reload-plugins`, or open a new session. You need `git` and, for pull requests, the `gh` CLI.
 
-## Primi dieci minuti
-1. Apri Claude Code nella cartella del progetto (anche vuota) e lancia:
+## The first ten minutes
+1. Open Claude Code in the project folder (it can be empty) and run:
    ```
    /relay:new-project
    ```
-   Se hai un prototipo o altro materiale da cui partire, indicalo: `/relay:new-project . ../il-mio-prototipo`.
-2. La skill crea i documenti, installa due plugin di supporto, legge il materiale e ti fa alcune domande tecniche.
-3. Ti mostra l'elenco dei task proposti. Correggilo finché ti convince, poi dai l'ok: scrive le schede e committa.
-4. Da qui in poi ogni sessione di lavoro è:
+   If you have a prototype or other material to start from, name it: `/relay:new-project . ../my-prototype`.
+2. The skill creates the documents, installs two supporting plugins, reads the material and asks you a few technical questions.
+3. It shows you the list of proposed tasks. Correct it until you are happy, then give the go-ahead: it writes the cards and commits.
+4. From then on, every working session is:
    ```
-   /relay:start-session      scegli il task
-   …lavori…
+   /relay:start-session      choose the task
+   …you work…
    /relay:end-session        handover, commit, pull request
    ```
-5. Quando serve un task nuovo o uno va cambiato: `/relay:replan`.
+5. When a new task is needed or one must change: `/relay:replan`.
 
-## I comandi
-| Quando | Comando | Cosa fa |
+## The commands
+| When | Command | What it does |
 |---|---|---|
-| Una volta, all'inizio | `/relay:new-project` | Imposta la repo: documenti, plugin, domande tecniche, task |
-| A ogni inizio sessione | `/relay:start-session` | Legge i documenti, chiede quali task fare, carica le skill che servono |
-| Quando il piano cambia | `/relay:replan` | Aggiunge, modifica, divide, unisce o toglie task, e aggiorna i documenti che ne dipendono |
-| Prima di un task grande | `/relay:plan` | Scrive il piano della feature e lo fa approvare |
-| A ogni scelta difficile da rovesciare | `/relay:adr` | Registra la decisione e le alternative scartate |
-| Per passare un task a un'altra sessione | `/relay:write-prompt` | Scrive il prompt per un orchestratore con la sua squadra |
-| A ogni fine sessione | `/relay:end-session` | Verifica, revisione, handover, stato, commit, pull request |
+| Once, at the beginning | `/relay:new-project` | Sets up the repo: documents, plugins, technical questions, tasks |
+| At the start of every session | `/relay:start-session` | Reads the documents, asks which tasks to take, loads the skills the work needs |
+| When the plan changes | `/relay:replan` | Adds, changes, splits, merges or drops tasks, and updates the documents that depend on them |
+| Before a big task | `/relay:plan` | Writes the feature plan and gets it approved |
+| At every hard-to-reverse choice | `/relay:adr` | Records the decision and the alternatives discarded |
+| To hand a task to another session | `/relay:write-prompt` | Writes the prompt for an orchestrator with its team |
+| At the end of every session | `/relay:end-session` | Verification, review, handover, status, commit, pull request |
 
-Nessun comando scrive su `main` né unisce una pull request: push e pull request si fanno solo dopo aver chiesto.
+No command writes to `main` or merges a pull request: pushing and opening a pull request happen only after asking.
 
-**Come si usa ogni comando, con esempi: [docs/guida.md](docs/guida.md).**
+**How to use each command, with examples: [docs/guide.md](docs/guide.md).**
 
-## Cosa trovi nella repo dopo `/relay:new-project`
+## What is in the repo after `/relay:new-project`
 ```
-CLAUDE.md                 ciò che ogni sessione deve sapere: stack, comandi, regole
-CONTRIBUTING.md           come si lavora: branch, squadra, plugin
+CLAUDE.md                 what every session must know: stack, commands, rules
+CONTRIBUTING.md           how we work: branches, team, plugins
 docs/
-  PLAN.md                 obiettivo, milestone, tabellone dei task
-  tasks/                  una scheda per task
-  STATUS.md               cosa è vero adesso, in una schermata
-  handover/               un file per sessione: cosa è stato fatto, cosa resta
-  decisions/              le decisioni (ADR): perché X e non Y
-  plans/                  i piani delle feature grandi
-  ARCHITECTURE.md         come sta insieme il sistema
-  GLOSSARY.md             le parole del progetto, un significato ciascuna
-.claude/                  permessi, due hook, tre agenti di revisione
-.github/                  CI generica, template di issue e pull request
+  PLAN.md                 goal, milestones, task board
+  tasks/                  one card per task
+  STATUS.md               what is true right now, on one screen
+  handover/               one file per session: what was done, what is left
+  decisions/              the decisions (ADRs): why X and not Y
+  plans/                  the plans of big features
+  ARCHITECTURE.md         how the system fits together
+  GLOSSARY.md             the project's words, one meaning each
+.claude/                  permissions, two hooks, three review agents
+.github/                  generic CI, issue and pull request templates
 ```
 
-## Gli altri due plugin
-`/relay:new-project` installa e abilita per la repo anche:
+## The other two plugins
+`/relay:new-project` also installs and enables for the repo:
 
-- [`mattpocock-skills`](https://github.com/mattpocock/skills), per le parti tecniche: sviluppo guidato dai test, diagnosi dei difetti, progettazione dei moduli.
-- [`ponytail`](https://github.com/DietrichGebert/ponytail), per il codice: cerca ciò che esiste già e scrive solo ciò che serve.
+- [`mattpocock-skills`](https://github.com/mattpocock/skills), for the technical parts: test-driven development, diagnosing defects, designing modules.
+- [`ponytail`](https://github.com/DietrichGebert/ponytail), for the code: it looks for what already exists and writes only what is needed.
 
-`/relay:start-session` carica le loro skill quando il task le richiede. I documenti e le decisioni del progetto vengono comunque prima di qualsiasi skill.
+`/relay:start-session` loads their skills when the task calls for them. The project's documents and decisions still come before any skill.
 
-## Stato
-Versione 0.3.0. Lo scaffold, il controllo dei task e l'installazione sono provati da `tests/run.sh`, che gira in CI a ogni pull request. Non ancora provati: un progetto vero dall'inizio alla fine, e l'uso dentro Codex.
+## State
+Version 0.3.0. The scaffold, the task check and the installation are tested by `tests/run.sh`, which runs in CI on every pull request. Not tested yet: a real project from start to finish, and use inside Codex.
 
-Il metodo nasce dalla ricostruzione di stemee a partire da un prototipo (novembre 2026): il kit è quello usato lì, ripulito da ciò che era specifico del progetto.
+The method was born while rebuilding stemee from a prototype (November 2026): the kit is the one used there, cleaned of what was specific to that project.
 
-## Per chi vuole modificarlo
-- `skills/<nome>/SKILL.md`: le sette skill. Ognuna ha una sola copia, qui: il kit non le copia nelle repo.
-- `skills/new-project/reference/`: il metodo (`method.md`), come si legge un riferimento (`from-reference.md`), le domande tecniche e com'è fatto un buon task (`tasks.md`).
-- `skills/new-project/templates/`: il kit copiato nel progetto. Il prefisso `dot-` diventa un punto (`dot-claude/` → `.claude/`).
-- `skills/new-project/scripts/scaffold.sh`: copia il kit; con `--check` elenca ciò che è ancora da riempire.
-- `tests/run.sh`: le prove. `./tests/run.sh` prima di ogni commit.
+## For those who want to change it
+- `skills/<name>/SKILL.md`: the seven skills. Each has one copy, here: the kit does not copy them into repos.
+- `skills/new-project/reference/`: the method (`method.md`), how a reference is read (`from-reference.md`), the technical questions and what makes a good task (`tasks.md`).
+- `skills/new-project/templates/`: the kit copied into the project. The `dot-` prefix becomes a dot (`dot-claude/` → `.claude/`).
+- `skills/new-project/scripts/scaffold.sh`: copies the kit; with `--check` it lists what is still to fill in.
+- `tests/run.sh`: the tests. Run `./tests/run.sh` before every commit.
 
-Chi cambia una regola del metodo la cambia in `method.md`, nei template che la ripetono e nelle skill che la applicano: si cerca la vecchia formulazione con `grep` prima di committare.
+Whoever changes a rule of the method changes it in `method.md`, in the templates that repeat it and in the skills that apply it: `grep` for the old wording before committing. The documentation exists in English and Italian: a change goes in both (`README.md` and `README.it.md`, `docs/guide.md` and `docs/guida.md`).
 
-## Licenza
+## Licence
 [MIT](LICENSE).
