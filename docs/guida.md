@@ -1,6 +1,8 @@
 # Guida a relay
 
-Come si usa ogni comando, cosa aspettarsi e cosa resta nella repo. Per installarlo e per una panoramica: [README](../README.md).
+[English](guide.md) · **Italiano**
+
+Come si usa ogni comando, cosa aspettarsi e cosa resta nella repo. Per installarlo e per una panoramica: [README](../README.it.md).
 
 - [Il ciclo](#il-ciclo)
 - [`new-project`: impostare la repo](#new-project-impostare-la-repo)

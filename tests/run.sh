@@ -107,4 +107,17 @@ rm "$filled/docs/tasks/"*.bak
 echo "# T09 · Orphan" > "$filled/docs/tasks/T09-orphan.md"
 check "--check reports a card with no row" grep -q 'no row for T09' <<<"$(bash "$scaffold" --check "$filled")"
 
+# 7. The documentation exists in two languages with the same structure.
+same_shape() {  # same number of headings, table rows and code fences in both files
+  for pattern in '^#+ ' '^\|' '^ *```'; do
+    [ "$(grep -cE "$pattern" "$1")" = "$(grep -cE "$pattern" "$2")" ] || return 1
+  done
+}
+check "README.md and README.it.md have the same structure" same_shape "$here/../README.md" "$here/../README.it.md"
+check "docs/guide.md and docs/guida.md have the same structure" same_shape "$here/../docs/guide.md" "$here/../docs/guida.md"
+check "every command in the English docs exists as a skill" bash -c '
+  cd "$1/.." && for s in $(grep -hoE "/relay:[a-z-]+" README.md docs/guide.md | sed "s#/relay:##" | sort -u); do
+    test -f "skills/$s/SKILL.md" || { echo "missing $s"; exit 1; }
+  done' _ "$here"
+
 [ "$fail" -eq 0 ] && echo "All checks passed." || { echo "Some checks failed."; exit 1; }
