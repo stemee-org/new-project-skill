@@ -52,7 +52,7 @@ Every task starts from the team, without being asked.
 - Model and effort are sized on the piece of work, from the table in `CONTRIBUTING.md`, and passed explicitly on each `Agent` call.
 
 ## The session loop
-`/start-session` (status, latest handover, plan, and the branches and pull requests not yet on `main`) → claim → team table → `/plan` if the task is big → work in waves → verify → `/handover` → commit → `/ship` (pull request). `/adr` whenever a hard-to-reverse choice is made. `/write-prompt` to hand a whole task to another session.
+`/start-session` (reads the documents and what is not yet on `main`, asks which tasks, loads the plugin skills the work needs: `mattpocock-skills` for the technical parts, `ponytail` for the code) → claim → team table → `/plan` if the task is big → work in waves → verify → `/handover` → commit → `/ship` (pull request). `/adr` whenever a hard-to-reverse choice is made. `/write-prompt` to hand a whole task to another session.
 
 ## What experience added
 These were learned the hard way; keep them when adapting the kit.

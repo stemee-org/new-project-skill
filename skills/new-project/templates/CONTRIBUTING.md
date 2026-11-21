@@ -48,7 +48,7 @@ One subagent per independent piece of work, none for a piece that is a few tool 
 ## Plugins
 `.claude/settings.json` enables them: Claude Code offers to install them to whoever opens the repo. ADRs and the documents of this repo come before any plugin skill; what a plugin skill produces is stored in these documents (`docs/plans/`, `docs/tasks/` and the task board, `docs/GLOSSARY.md`, an ADR), never in a parallel set of files. The lists below are checked against `claude plugin details <plugin>`, not written from memory.
 
-- **`mattpocock-skills@claude-plugins-official`** (by hand: `claude plugin install mattpocock-skills@claude-plugins-official`). Its engineering skills read `docs/agents/issue-tracker.md` and `docs/agents/domain.md`, which point them at this repo's tasks, glossary and ADRs; `/setup-matt-pocock-skills` is not run here, because it would move them. Where they meet «How a task is built»:
+- **`mattpocock-skills@claude-plugins-official`** (by hand: `claude plugin install mattpocock-skills@claude-plugins-official`). Its engineering skills read `docs/agents/issue-tracker.md` and `docs/agents/domain.md`, which point them at this repo's tasks, glossary and ADRs; `/setup-matt-pocock-skills` is not run here, because it would move them. `/start-session` loads the ones the chosen task needs. Where they meet «How a task is built»:
 
   | When | Skill |
   |---|---|
@@ -58,7 +58,7 @@ One subagent per independent piece of work, none for a piece that is a few tool 
   | A new word or a structural choice | `domain-modeling`, `codebase-design` |
   | Last wave | `code-review`, beside the `code-reviewer` agent |
 
-- **`ponytail@ponytail`** (by hand: `claude plugin marketplace add DietrichGebert/ponytail`, then `claude plugin install ponytail@ponytail`). On in every session: before writing code it looks for what already exists (the codebase, the standard library, the platform, an installed dependency) and writes only what the task needs. It never cuts what the rules of this repo require: tests, validation, the handover and the documents stay. `/ponytail-review` joins the last wave; `/ponytail-audit` ranks the defects of a whole repo, useful on a codebase adopted in place. `/ponytail off` turns it off for a session. In Claude Code it shows a band above the prompt and keeps each task's cost and time in `~/.config/ponytail/band/` on your machine; nothing is sent anywhere unless you set a webhook.
+- **`ponytail@ponytail`** (by hand: `claude plugin marketplace add DietrichGebert/ponytail`, then `claude plugin install ponytail@ponytail`). On in every session: before writing code it looks for what already exists (the codebase, the standard library, the platform, an installed dependency) and writes only what the task needs. It never cuts what the rules of this repo require: tests, validation, the handover and the documents stay. `/start-session` loads it before the first line of code; `/ponytail-review` joins the last wave; `/ponytail-audit` ranks the defects of a whole repo, useful on a codebase adopted in place. `/ponytail off` turns it off for a session. In Claude Code it shows a band above the prompt and keeps each task's cost and time in `~/.config/ponytail/band/` on your machine; nothing is sent anywhere unless you set a webhook.
 
 ## Area owners
 The owner is the person to hear before changing the area, not the only one who may touch it. {{If derived from a reference's history: a proposal until confirmed.}}

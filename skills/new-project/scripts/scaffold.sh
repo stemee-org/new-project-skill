@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Copies the project kit into a repository without overwriting anything.
-#   scaffold.sh <target-dir>           copy templates/ (a "dot-" prefix becomes ".")
+#   scaffold.sh <target-dir>           copy templates/ (a "dot-" prefix becomes ".") and the
+#                                      start-session skill from ../../start-session
 #   scaffold.sh --check <target-dir>   list what is still unfilled: setup placeholders ({{…}}),
 #                                      tasks on the board with no card, cards that do not say
 #                                      why, what or when the task is done
@@ -54,19 +55,24 @@ mkdir -p "$target"
 copied=0
 skipped=()
 
+copy() {  # copy <source file> <path inside the target>; never overwrites
+  if [ -e "$target/$2" ]; then
+    skipped+=("$2")
+    return
+  fi
+  mkdir -p "$(dirname "$target/$2")"
+  cp "$1" "$target/$2"
+  copied=$((copied + 1))
+}
+
 while IFS= read -r -d '' src; do
   rel=${src#"$templates"/}
   # dot-claude/hooks/x.sh -> .claude/hooks/x.sh ; dot-gitignore -> .gitignore
-  dest_rel=$(printf '%s' "$rel" | sed -E 's#(^|/)dot-#\1.#g')
-  dest="$target/$dest_rel"
-  if [ -e "$dest" ]; then
-    skipped+=("$dest_rel")
-    continue
-  fi
-  mkdir -p "$(dirname "$dest")"
-  cp "$src" "$dest"
-  copied=$((copied + 1))
+  copy "$src" "$(printf '%s' "$rel" | sed -E 's#(^|/)dot-#\1.#g')"
 done < <(find "$templates" -type f ! -name '.DS_Store' -print0 | sort -z)
+
+# start-session is also published on its own (skills/start-session): the kit takes that copy.
+copy "$here/../../start-session/SKILL.md" ".claude/skills/start-session/SKILL.md"
 
 chmod +x "$target"/.claude/hooks/*.sh 2>/dev/null || true
 

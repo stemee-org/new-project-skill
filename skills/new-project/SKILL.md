@@ -16,7 +16,7 @@ Then fill the rest of the documents (4), check (5), commit and hand over (6). Th
 
 Files of this skill, in the folder that holds this `SKILL.md` (written `<skill>` below; in Claude Code it is `${CLAUDE_SKILL_DIR}`). Read each when its step says so:
 - `<skill>/scripts/scaffold.sh`: copies the kit without overwriting; `--check` lists what is still unfilled.
-- `<skill>/templates/`: the kit.
+- `<skill>/templates/`: the kit. The script adds to it the `start-session` skill, which lives beside this one (`<skill>/../start-session`) because it is also published on its own.
 - `<skill>/reference/from-reference.md`: how to read a reference and where each finding goes.
 - `<skill>/reference/tasks.md`: the technical questions and what makes a task good.
 - `<skill>/reference/method.md`: what each document is for and the rules behind the method.

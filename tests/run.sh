@@ -26,6 +26,15 @@ for f in CLAUDE.md CONTRIBUTING.md README.md .env.example .gitignore .editorconf
 done
 check "no dot- prefix left" bash -c "! find '$repo' -name 'dot-*' | grep -q ."
 
+check "start-session in the kit is the published one" cmp -s "$here/../skills/start-session/SKILL.md" "$repo/.claude/skills/start-session/SKILL.md"
+
+# install.sh links both skills.
+bash "$here/../install.sh" "$tmp/skills-dir" >/dev/null
+check "install.sh links new-project" test -f "$tmp/skills-dir/new-project/SKILL.md"
+check "install.sh links start-session" test -f "$tmp/skills-dir/start-session/SKILL.md"
+check "scaffold works through the link" bash "$tmp/skills-dir/new-project/scripts/scaffold.sh" "$tmp/linked"
+check "start-session copied through the link" test -f "$tmp/linked/.claude/skills/start-session/SKILL.md"
+
 # 2. Nothing is overwritten on a second run.
 echo "mine" > "$repo/CLAUDE.md"
 out=$(bash "$scaffold" "$repo")

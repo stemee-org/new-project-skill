@@ -1,6 +1,8 @@
-# new-project
+# new-project e start-session
 
-Una skill per agenti di programmazione (Claude Code, Codex) che imposta un progetto nuovo con il metodo «prima i documenti». Fa tre cose, in quest'ordine:
+Due skill per agenti di programmazione (Claude Code, Codex) per lavorare con il metodo «prima i documenti»: `new-project` imposta la repo una volta, `start-session` apre ogni sessione di lavoro.
+
+`new-project` fa tre cose, in quest'ordine:
 
 1. **Crea i file.** Da zero file a tutta la documentazione: `CLAUDE.md`, piano con task e milestone, una scheda per task, stato, ADR, handover, piani di feature, skill di progetto, hook e agenti di revisione.
 2. **Installa due plugin**: [`mattpocock-skills`](https://github.com/mattpocock/skills) e [`ponytail`](https://github.com/DietrichGebert/ponytail).
@@ -20,6 +22,16 @@ Il metodo nasce dalla ricostruzione di stemee a partire da un prototipo (novembr
 
 Non scrive codice di prodotto: la prima sessione finisce con i documenti, i task e il primo da prendere.
 
+## start-session
+`/start-session`
+
+1. **Legge i documenti**, solo i Markdown e non il codice: stato, ultimo handover, piano. Guarda anche branch e pull request non ancora unite, dove può esserci un task già preso.
+2. **Chiede quali task fare**, proponendo quelli che nessuno blocca e nessuno ha preso; legge la scheda di quelli scelti e li segna nel piano.
+3. **Carica le skill dei due plugin** che servono a quel lavoro: `mattpocock-skills` per le parti tecniche (`tdd`, `diagnosing-bugs`, `codebase-design`, `domain-modeling`…), `ponytail` per il codice, prima della prima riga. ADR e documenti del progetto vengono comunque prima di ogni skill.
+4. Mostra la squadra e aspetta l'ok.
+
+Funziona su una repo impostata con `new-project`: se i documenti mancano lo dice e propone di crearli. Il kit ne copia una versione nella repo (`.claude/skills/start-session`), così la trova anche chi non ha installato il plugin.
+
 ### Com'è fatto un task
 Una scheda dice: **perché** esiste e perché a quel punto (cosa sblocca, da quale risposta o ADR nasce), **cosa** funziona alla fine visto da chi lo usa, da dove viene nel riferimento e cosa si **tiene, cambia o toglie**, **quando è finito** (controlli che si possono eseguire o vedere), cosa resta **fuori**. La prova: chi non era nella sessione, con la sola scheda, sa dire perché il task esiste, può cominciarlo e sa quando fermarsi. Criteri ed esempio in `skills/new-project/reference/tasks.md`.
 
@@ -29,19 +41,21 @@ Una scheda dice: **perché** esiste e perché a quel punto (cosa sblocca, da qua
 /plugin marketplace add stemee-org/new-project-skill
 /plugin install new-project@stemee-org
 ```
+Il plugin porta entrambe le skill: `/new-project:new-project` e `/new-project:start-session`.
 
 **Claude Code o Codex, come skill personale** (un link alla copia clonata: `git pull` aggiorna tutto):
 ```
 git clone https://github.com/stemee-org/new-project-skill.git
 cd new-project-skill
-./install.sh claude     # ${CLAUDE_CONFIG_DIR:-~/.claude}/skills/new-project
-./install.sh codex      # ${CODEX_HOME:-~/.codex}/skills/new-project
+./install.sh claude     # ${CLAUDE_CONFIG_DIR:-~/.claude}/skills/{new-project,start-session}
+./install.sh codex      # ${CODEX_HOME:-~/.codex}/skills/{new-project,start-session}
 ./install.sh <cartella-delle-skill>
 ```
 Con più profili di Claude Code si lancia una volta per profilo, con `CLAUDE_CONFIG_DIR` impostata.
 
 ## Struttura
-- `skills/new-project/SKILL.md`: il percorso, passo per passo.
+- `skills/new-project/SKILL.md`: il percorso di `new-project`, passo per passo.
+- `skills/start-session/SKILL.md`: `start-session`. È l'unica copia: lo scaffold la porta nel kit.
 - `skills/new-project/reference/tasks.md`: le domande tecniche e com'è fatto un buon task.
 - `skills/new-project/reference/from-reference.md`: leggere un prototipo o un altro riferimento, e dove va ogni cosa trovata.
 - `skills/new-project/reference/method.md`: il metodo e le sue ragioni.
